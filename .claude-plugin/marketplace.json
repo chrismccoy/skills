@@ -1,0 +1,33 @@
+{
+  "name": "chrismccoy-skills",
+  "owner": {
+    "name": "Chris McCoy",
+    "email": "fris@fris.net"
+  },
+  "plugins": [
+    {
+      "name": "html-to-wordpress-theme",
+      "source": "./html-to-wordpress-theme",
+      "description": "Converts static HTML files into production-quality, installable WordPress themes with Tailwind v3, WCAG 2.1 AA accessibility, and child-theme compatibility. Phased workflow with user approval gates: analysis, planning, chunked implementation, self-audit.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "html-design-styles",
+      "source": "./html-design-styles",
+      "description": "A catalog of 53 named design styles (bento, brutalist, glassmorphism, vaporwave, kawaii, cyberpunk, swiss, art deco, neumorphism, and more) with full color palettes, typography stacks, and component patterns for building consistent on-brand frontend interfaces.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "code-application-blueprint",
+      "source": "./code-application-blueprint",
+      "description": "Generates a complete 10-section technical project specification from five required inputs: project description, tech stack, interfaces, scale, and constraints. Output is detailed enough for direct implementation by humans or AI coding assistants — no TBD, no placeholders.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "wordpress-plugin",
+      "source": "./wordpress-plugin",
+      "description": "Generates complete, enterprise-grade WordPress plugins from scratch — the kind that could be submitted to WordPress.org today. Seven-question multiple-choice intake (functionality categories, target users, admin interface components, frontend display surfaces, third-party integrations) plus two free-text inputs (plugin name, feature detail) drive a full directory tree with modular OOP classes (Admin, Frontend, Database, AJAX, REST), Settings API pages, Gutenberg blocks, shortcodes, REST endpoints, custom tables via dbDelta(), nonce/sanitization/escaping/capability checks, prepared statements, conditional asset enqueueing, internationalization with .pot file, WordPress.org-format readme.txt, and a complete uninstall.php cleanup script. WordPress Coding Standards compliant.",
+      "version": "1.0.0"
+    }
+  ]
+}
