@@ -1,0 +1,13 @@
+*-workspace/
+
+.skill-staging/
+
+node_modules/
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+*.swp
+*.swo
+*~
