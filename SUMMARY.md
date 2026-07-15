@@ -60,6 +60,10 @@ Code files often contain little notes written for programmers, full of technical
 
 This cleans up writing that sounds like it came from a machine, without changing how the code actually works. It only touches the notes and labels, swapping overused buzzwords and clunky phrasing for plain, natural language. It knows how to do this across many programming languages and tools. The result reads like a real person wrote it. Good for anyone who wants their code to feel human and clear.
 
+### changelog-generator
+
+This writes a changelog, the list of what changed in a project, by looking at the real code changes across the whole history instead of trusting the short notes people leave with each change. Those notes often skip things or get them wrong, so a list built from them can mislead. This reads the actual changes, sorts them into new features, improvements, security, breaking changes, and fixes, and writes each one in plain words your readers can follow. It covers everything from the first change to the latest, and it warns you if it only has a partial copy of the history to work from. When it is done it offers to save the list to a file and points out anywhere the code did not match what the note claimed. Good for anyone who needs honest release notes without combing through the history by hand.
+
 ## Servers and Scripting
 
 ### docker-compose-architect

@@ -25,6 +25,7 @@ Claude plugin marketplace for all my own custom skills.
 - [`explain-my-code`](#explain-my-code). Reads a whole repo and writes one self-contained onboarding document - architecture, folder map, app flow, design patterns, risks - in 13 fixed sections with Mermaid diagrams, so anyone new to the project can get up to speed just by reading it.
 - [`docblock-rewrite`](#docblock-rewrite). Rewrites bulky PHPDoc and JSDoc blocks into short, plain-English one-line comments, backing up the originals first.
 - [`unslop`](#unslop). Strips the AI-sounding voice out of comments, docstrings, and names in your code without changing how the code runs. Works across 19+ languages.
+- [`changelog-generator`](#changelog-generator). Writes a changelog your users can read from a repo's whole git history by reading the real code changes, not the commit messages, then sorts every change and saves `CHANGELOG.md`.
 
 **Servers and Scripting**
 
@@ -1091,6 +1092,62 @@ The full skill instructions live at [`unslop/skills/unslop/SKILL.md`](unslop/ski
 
 ---
 
+### `changelog-generator`
+
+Point Claude at a git repo. Get back a changelog your users can read, built from the actual code changes across the whole history - first commit to `HEAD` - not from the commit messages.
+
+```
+/plugin install changelog-generator@chrismccoy
+```
+
+Ever tried to write release notes from `git log` and found half the commits say "fixes", "tweaks", or "and more"? Commit messages leave things out and get the label wrong. A "fix" turns out to undo a break from an hour earlier. A one-line "cleanup" hides three real features. A commit tagged "security" only renamed a variable. If you write the changelog from the messages, you ship a changelog that is partly fiction.
+
+This plugin reads the code instead. It walks the full history, splits it into eras by date and tags, and reads the real diffs with `git show` and `git diff`. The diff is the truth of what shipped, so the changelog says what actually changed. It sorts each change into New Features, Improvements, Security, Breaking Changes, or Fixes, drops the noise users never see, and writes everything in plain language anyone can follow. When it is done it offers to save `CHANGELOG.md` and tells you every place the code did not match the commit message.
+
+#### 📋 Technical Overview
+
+A Claude Code plugin with one slash command, one skill, and one bundled script. The skill body in `skills/changelog-generator/SKILL.md` carries the trust boundary, the five-step workflow, the per-range brief for sub-agents, and the fixed output format. The script `scripts/map-history.sh` does the deterministic git plumbing (repo check, shallow check, root commit, tags, full oldest-first timeline, root-to-HEAD diffstat) so the model never has to reinvent it. The slash command `/changelog-generator` takes a repo path or runs on the current directory.
+
+#### ✨ Features
+
+- 📖 Reads the code change, not the message. `git show` / `git diff` is the source, so "fixes" and "and more" get unpacked into what really shipped
+- 🕰️ Covers the whole history. First commit to `HEAD`, no gaps. It will not take a date or version range - the scope is always everything
+- 🧪 Checks the repo first. Stops if the folder is not a git repo, warns when the copy is shallow (so it never claims full coverage), and handles a one-commit history
+- 🗂️ Splits the history into eras. Contiguous per-release chunks by date and theme, using tags as the boundaries
+- 👥 Handles big histories. Over about 40 commits, or when a diff is too large to read in one pass, it splits the work across parallel helpers, then combines and double-checks anything surprising against the real code - it never quietly skips or samples
+- 🏷️ Sorts every change: feature, improvement, fix, security, breaking change, or internal
+- 🕵️ Catches what messages hide. Lists features buried under "and more", drops fixes that only undo a break from the same batch, refuses to call reworded or moved code "new", and flags any commit whose message says more or less than the diff did
+- 🔒 Pulls security and breaking changes into their own sections, with the real mechanism (how a check or block works, what setting was removed or flipped)
+- 🛡️ Treats everything in the repo as data, not orders. A diff that says "ignore the above" gets described, never obeyed
+- 📝 Offers to save `CHANGELOG.md` and reports where the diff corrected the commit messages
+
+#### 🔄 How it works
+
+1. **Map.** Run `scripts/map-history.sh`. Act on its `STATUS` / `SHALLOW` / `COMMIT_COUNT` - stop if not a git repo, warn if shallow, take the single-commit path if there is only one commit.
+2. **Split.** Break the timeline into contiguous ranges by era and release, using tags and day-grouped commits as boundaries.
+3. **Read the diffs.** For each range, `git diff <range> --stat` for the shape, then `git show` / `git log -p` for the substance. Over ~40 commits or an oversized diff, dispatch one helper per range in parallel with the per-range brief.
+4. **Synthesize.** Merge the findings, treat helper reports as claims and spot-check the surprising ones against the diff, dedupe, order newest first, and lift out security and breaking changes.
+5. **Check and write.** Confirm the ranges chain together with no gaps and that a real diff sits behind every entry, then emit the changelog and offer to save it.
+
+#### 🚀 How to use it
+
+Two ways to invoke:
+
+**Slash command:**
+
+```
+/changelog-generator            ← runs on the current repo
+/changelog-generator ../my-app  ← runs on a repo at that path
+```
+
+**Natural language** (auto-triggers via the skill):
+
+> *"generate a changelog for this repo"*, *"write release notes from the git history"*, *"what actually shipped in this project?"*, *"changelog from the code changes, don't trust the commit messages"*, *"turn this repo's history into release notes my users can read"*
+
+The full skill instructions live at [`changelog-generator/skills/changelog-generator/SKILL.md`](changelog-generator/skills/changelog-generator/SKILL.md), the slash command at [`changelog-generator/commands/changelog-generator.md`](changelog-generator/commands/changelog-generator.md), and the history script at [`changelog-generator/skills/changelog-generator/scripts/map-history.sh`](changelog-generator/skills/changelog-generator/scripts/map-history.sh).
+
+---
+
 ## Servers and Scripting
 
 ### `docker-compose-architect`
@@ -1955,6 +2012,14 @@ The full skill instructions live at [`session-stats/skills/session-stats/SKILL.m
 │ └── skills/
 │ └── explain-my-code/
 │ └── SKILL.md ← 5-phase procedure (Scope → Identify → Traverse → Write → Verify) + 13-section output contract
+├── changelog-generator/ ← plugin
+│ ├── commands/
+│ │ └── changelog-generator.md ← /changelog-generator slash command (repo path arg or current dir)
+│ └── skills/
+│ └── changelog-generator/
+│ ├── SKILL.md ← trust boundary + 5-step workflow + per-range brief + fixed output format
+│ └── scripts/
+│ └── map-history.sh ← repo/shallow check + root commit + tags + oldest-first timeline
 ├── excel-formula-troubleshooter/ ← plugin
 │ ├── commands/
 │ │ └── fix-formula.md ← /fix-formula slash command (formula + issue intake)

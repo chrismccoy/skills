@@ -2,7 +2,7 @@
 
 A quick guide to what's in this marketplace and how the plugins compare. Each plugin is sorted into one of three groups by **how much it does** - not by how good it is. A "quick win" plugin can be just as useful as a "full toolkit" one; it just does a smaller, more focused job.
 
-**At a glance:** 1 quick win · 13 guided helpers · 11 full toolkits.
+**At a glance:** 1 quick win · 13 guided helpers · 12 full toolkits.
 
 ## Quick wins
 
@@ -48,6 +48,7 @@ The heavy hitters. They run multi-step workflows, generate whole sets of files, 
 | `codebase-to-mermaid` | `/codebase-to-mermaid` | Reads a codebase you don't know and draws accurate diagrams, every box tied to a real file and line |
 | `mermaid-to-ascii` | `/mermaid-to-ascii` | Redraws a Mermaid diagram file as plain text-art and saves it next to the original, ready to paste into a comment, README, or terminal |
 | `explain-my-code` | `/explain-my-code` | Reads a whole codebase and writes one onboarding document - architecture, flow, patterns, and risks, with diagrams |
+| `changelog-generator` | `/changelog-generator` | Writes a changelog from a repo's whole history by reading the real code changes, not the commit messages, then sorts each change and saves the file |
 | `session-stats` | `/session-stats` | Turns a Claude Code session into a single shareable stats page - prompts, edits, cost, and files changed |
 
 ## Good to know
@@ -58,12 +59,12 @@ The heavy hitters. They run multi-step workflows, generate whole sets of files, 
 - `naming-strategist` → type `/name-domains`
 - `contract-framework` → type `/draft-contract`
 
-The other 22 use their own name as the command.
+The other 23 use their own name as the command.
 
 **How each one gets what it needs from you:**
 
 - **Asks multiple-choice questions** (just pick from a menu): 20 plugins - the easiest way to start
 - **Asks a few questions directly:** 1 - `html-to-wordpress-theme`
-- **Just works from what you point it at** (a file path or your current session, no questions): 4 - `docblock-rewrite`, `mermaid-to-ascii`, `session-stats`, `wordpress-architect-review`
+- **Just works from what you point it at** (a file path or your current session, no questions): 5 - `changelog-generator`, `docblock-rewrite`, `mermaid-to-ascii`, `session-stats`, `wordpress-architect-review`
 
 Every plugin can be started with a simple `/command`, or just by describing what you want.
