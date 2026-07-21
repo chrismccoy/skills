@@ -24,6 +24,10 @@ This acts like a senior expert giving your WordPress plugin or theme a thorough 
 
 This is a full WordPress health check, much like hiring a seasoned consultant for your site. It reviews ten areas, from speed and security to planning for future growth, and for each one gives you the finding, why it matters, and what to do about it. It wraps up with scores and a clear list of priorities. It is best for site owners who want an expert opinion on the whole picture, not just one problem. You come away knowing exactly where you stand.
 
+### wordpress-formatter
+
+This tidies up the formatting of a WordPress theme's files so they follow the official coding standard. It fixes things like mixed tabs and spaces, uneven alignment, and inconsistent styling, all in one pass. The key point is that it only changes formatting, never how the site actually works, and it checks each file afterward to make sure nothing broke. It asks a few short questions first, installs the tools it needs into the project, and leaves anything that could change behavior for you to decide. Good for cleaning up a theme before you hand it off or commit it.
+
 ## Plan and Design
 
 ### app-blueprint

@@ -11,6 +11,7 @@ Claude plugin marketplace for all my own custom skills.
 - [`html-to-wordpress-theme`](#html-to-wordpress-theme). Converts static HTML/Tailwind files into installable WordPress themes.
 - [`wordpress-architect-review`](#wordpress-architect-review). Reviews a WordPress plugin or theme file by file, then returns ranked findings, a scorecard, and the top fixes to make.
 - [`wordpress-consultant`](#wordpress-consultant). A senior WordPress consulting audit covering architecture, performance, security, and scalability, ending with a 0-100 scorecard and summary.
+- [`wordpress-formatter`](#wordpress-formatter). Formats a theme's template files to the WordPress coding standard - tabs, spacing, and array style - without changing how any page renders. It installs the tools, runs the fixer, and checks the result.
 
 **Plan and Design**
 
@@ -70,6 +71,7 @@ In any Claude Code session, run:
 /plugin install html-to-wordpress-theme@chrismccoy
 /plugin install wordpress-architect-review@chrismccoy
 /plugin install wordpress-consultant@chrismccoy
+/plugin install wordpress-formatter@chrismccoy
 
 # Plan and Design
 /plugin install app-blueprint@chrismccoy
@@ -427,6 +429,51 @@ Two ways to invoke:
 After the run, work the Section 10 priorities top-down - the ranked list is capped at 5 and ordered by impact, so start at the top, and use the summary-table scores to track health, performance, security, scalability, and code quality across follow-up engagements.
 
 The full skill instructions live at [`wordpress-consultant/skills/wordpress-consultant/SKILL.md`](wordpress-consultant/skills/wordpress-consultant/SKILL.md), the slash command at [`wordpress-consultant/commands/wordpress-consultant.md`](wordpress-consultant/commands/wordpress-consultant.md), and the on-demand reference files at [`wordpress-consultant/skills/wordpress-consultant/references/framework.md`](wordpress-consultant/skills/wordpress-consultant/references/framework.md), [`wordpress-consultant/skills/wordpress-consultant/references/output-contract.md`](wordpress-consultant/skills/wordpress-consultant/references/output-contract.md), [`wordpress-consultant/skills/wordpress-consultant/references/guardrails.md`](wordpress-consultant/skills/wordpress-consultant/references/guardrails.md).
+
+---
+
+### `wordpress-formatter`
+
+Formats a theme's template files and partials to the WordPress coding standard - tabs, spacing, array style, alignment - without changing how any page renders. It installs the tools, writes the config, runs the fixer, and checks the result.
+
+```
+/plugin install wordpress-formatter@chrismccoy
+```
+
+Most WordPress themes drift from the coding standard over time - mixed tabs and spaces, inconsistent array syntax, ragged alignment. This plugin cleans that up the safe way. It installs PHP_CodeSniffer and the WordPress Coding Standards into the theme's local `vendor/` folder (nothing global), writes a scoped `phpcs.xml.dist`, and runs `phpcbf` to fix everything that can be fixed automatically. It runs the fixer twice, since some fixes unlock others, then checks every changed file with `php -l` before it calls the job done.
+
+The important part is what it will not do. Formatting should never change how a page renders, so anything that could change behavior is reported but left alone: turning a loose `==` into a strict `===`, adding the strict flag to `array_search`, or removing `extract()`. The one exception is Yoda conditions, which only reorder the two sides of a comparison and are safe, and even those are applied only if you say yes. It also stops early on the two things that go wrong most often: if the folder is not a WordPress theme, or if there is no `composer.json`, it asks or stops rather than guessing.
+
+#### ✨ Features
+
+- 🎯 Five quick questions first. Scope (templates and partials, or all theme PHP), strictness (formatting only, or the full standard), Yoda checks on or off, the theme name, and any files to skip. Say "just do it" for safe defaults
+- 🧰 Installs the tools for you. PHP_CodeSniffer and the WordPress Coding Standards go into the theme's local `vendor/` as dev dependencies - nothing is installed globally
+- 🧾 Writes a scoped config. A `phpcs.xml.dist` that leaves out `vendor`, `node_modules`, and by default `lib`, `inc`, `assets`, and `functions.php`
+- 🔧 Fixes formatting only. Runs `phpcbf` twice for tabs, spacing, array style, and alignment - never escaping, sanitization, or behavior
+- 🛡️ Leaves risky changes alone. Loose `==` to `===`, the `array_search` strict flag, and `extract()` are reported, not applied, so runtime behavior never changes
+- ✅ Checks its own work. Runs `php -l` on every changed file and stops if anything breaks
+- 🚦 Two safe stops. No `composer.json` means it asks before creating one; a failed install means it shows the exact error instead of guessing
+- 🧱 Adds re-run shortcuts. `composer lint` and `composer format` so you can run it again anytime
+
+#### 🔄 How it works
+
+1. **Check first.** Confirm the folder is a WordPress theme (a `style.css` header or template files). Stop if it is not.
+2. **Intake.** Ask the five questions and wait for the answers, or use the defaults on "just do it".
+3. **Install.** Add PHPCS and WPCS as Composer dev dependencies, skipping if they are already there. Stop and report if the install fails.
+4. **Configure.** Write `phpcs.xml.dist` scoped to the answers, and add the `lint` and `format` composer scripts.
+5. **Fix.** Run `phpcbf` twice, then `php -l` on every changed file. A syntax error is a hard stop.
+6. **Report.** List what was fixed and what was left, with a reason for each item that was left.
+
+#### 🚀 How to use it
+
+```
+/wordpress-formatter ← formats the current theme
+/wordpress-formatter ./wp-content/themes/mytheme ← formats a specific theme
+```
+
+Or natural language: *"format my WordPress theme to the coding standard"*, *"run phpcbf on my templates"*, *"fix the indentation and spacing in my theme"*, *"set up phpcs for this theme"*, *"convert my theme files to tabs"*.
+
+The full skill instructions live at [`wordpress-formatter/skills/wordpress-formatter/SKILL.md`](wordpress-formatter/skills/wordpress-formatter/SKILL.md), and the slash command at [`wordpress-formatter/commands/wordpress-formatter.md`](wordpress-formatter/commands/wordpress-formatter.md).
 
 ---
 

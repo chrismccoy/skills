@@ -2,7 +2,7 @@
 
 A quick guide to what's in this marketplace and how the plugins compare. Each plugin is sorted into one of three groups by **how much it does** - not by how good it is. A "quick win" plugin can be just as useful as a "full toolkit" one; it just does a smaller, more focused job.
 
-**At a glance:** 1 quick win · 13 guided helpers · 12 full toolkits.
+**At a glance:** 1 quick win · 13 guided helpers · 13 full toolkits.
 
 ## Quick wins
 
@@ -41,6 +41,7 @@ The heavy hitters. They run multi-step workflows, generate whole sets of files, 
 | `wp-builder-pro` | `/wp-builder-pro` | Builds and fixes custom WordPress code - themes, plugins, blocks, WooCommerce, and more |
 | `wordpress-plugin` | `/wordpress-plugin` | Generates a complete, ready-to-submit WordPress plugin from scratch, security and cleanup included |
 | `wordpress-architect-review` | `/wordpress-architect-review` | Reviews a WordPress plugin or theme file by file, with a scorecard and the top fixes to make |
+| `wordpress-formatter` | `/wordpress-formatter` | Formats a theme's template files to the WordPress standard - tabs, spacing, arrays - without changing how any page renders, and checks its own work |
 | `powershell-script-engine` | `/powershell-script-engine` | Writes clean, production-ready PowerShell scripts with logging, error handling, and safe credential use |
 | `html-to-wordpress-theme` | `/html-to-wordpress-theme` | Converts your static HTML into an installable WordPress theme, checking its own work as it goes |
 | `unslop` | `/unslop` | Strips the AI-sounding voice out of your comments and names without changing how the code runs |
@@ -59,11 +60,11 @@ The heavy hitters. They run multi-step workflows, generate whole sets of files, 
 - `naming-strategist` → type `/name-domains`
 - `contract-framework` → type `/draft-contract`
 
-The other 23 use their own name as the command.
+The other 24 use their own name as the command.
 
 **How each one gets what it needs from you:**
 
-- **Asks multiple-choice questions** (just pick from a menu): 20 plugins - the easiest way to start
+- **Asks multiple-choice questions** (just pick from a menu): 21 plugins - the easiest way to start
 - **Asks a few questions directly:** 1 - `html-to-wordpress-theme`
 - **Just works from what you point it at** (a file path or your current session, no questions): 5 - `changelog-generator`, `docblock-rewrite`, `mermaid-to-ascii`, `session-stats`, `wordpress-architect-review`
 
