@@ -38,6 +38,10 @@ This takes a one-line idea for an app and turns it into a full building plan. It
 
 This is a menu of 53 ready-made looks for websites, from clean and minimal to bold, retro, cute, and many more. You pick a style by name and it gives you the matching colors, fonts, and layout details to use. It takes the guesswork out of deciding how a site should feel. It also keeps everything looking consistent across your pages. Handy when you know the vibe you want but not how to pull it off.
 
+### accessibility-audit
+
+This checks whether a website actually works for people with disabilities, and can fix what it finds. It looks at things like whether a button can be reached with the keyboard alone, whether a screen reader can announce what an icon does, and whether the text has enough contrast to read. You choose up front whether you want a report, want it to make the changes for you, or just want to paste in one piece of a page and get a fixed version back with notes on how to test it. In report mode it will not touch a single file. Every problem it reports comes with a short note on why it matters to a real person, and repeated problems are grouped together instead of listed over and over. When it rebuilds something like a menu or a pop-up window, it follows the standard rules for which keys should do what, because people who navigate by keyboard already know what the arrow keys and the escape key are supposed to do. It is honest about its limits, so anything that still needs a human to sit down with a screen reader gets listed separately rather than counted as passing, and it will never tell you that you are legally in the clear, because that is a question for a lawyer and not for a tool. Unlike the other tools here, it only runs when you type the command, so it never starts on its own or gets confused with a similar tool you might already have installed.
+
 ## Refactor, Map and Clean Up
 
 ### refactoring-analyst

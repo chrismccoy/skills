@@ -2,7 +2,7 @@
 
 A quick guide to what's in this marketplace and how the plugins compare. Each plugin is sorted into one of three groups by **how much it does** - not by how good it is. A "quick win" plugin can be just as useful as a "full toolkit" one; it just does a smaller, more focused job.
 
-**At a glance:** 1 quick win · 13 guided helpers · 13 full toolkits.
+**At a glance:** 1 quick win · 14 guided helpers · 13 full toolkits.
 
 ## Quick wins
 
@@ -31,6 +31,7 @@ These ask you a few questions (or take a short description), then produce a comp
 | `docker-compose-architect` | `/docker-compose-architect` | Builds a secure Docker setup for your app - networks, storage, health checks, secrets kept safe |
 | `app-blueprint` | `/blueprint` | Turns a one-line app idea into a full plan: folders, data, APIs, libraries, tests, and deployment |
 | `wordpress-consultant` | `/wordpress-consultant` | A senior WordPress audit across architecture, performance, security, and scaling, with a 0-100 scorecard |
+| `accessibility-audit` | `/accessibility-audit` or `/a11y-audit` | Checks a page, folder, or pasted component for accessibility problems, explains why each one matters, fixes them if you ask, and tells you which keys to test |
 
 ## Full toolkits
 
@@ -60,12 +61,16 @@ The heavy hitters. They run multi-step workflows, generate whole sets of files, 
 - `naming-strategist` → type `/name-domains`
 - `contract-framework` → type `/draft-contract`
 
-The other 24 use their own name as the command.
+The other 25 use their own name as the command. `accessibility-audit` also answers to the shorter `/a11y-audit`.
 
 **How each one gets what it needs from you:**
 
-- **Asks multiple-choice questions** (just pick from a menu): 21 plugins - the easiest way to start
+- **Asks multiple-choice questions** (just pick from a menu): 22 plugins - the easiest way to start
 - **Asks a few questions directly:** 1 - `html-to-wordpress-theme`
 - **Just works from what you point it at** (a file path or your current session, no questions): 5 - `changelog-generator`, `docblock-rewrite`, `mermaid-to-ascii`, `session-stats`, `wordpress-architect-review`
 
-Every plugin can be started with a simple `/command`, or just by describing what you want.
+**One plugin runs only when you type its command:**
+
+`accessibility-audit` is the exception to the rule below. It has no background trigger at all, on purpose. Accessibility tools are common, and if you have another one installed, two of them answering "make this accessible" is a coin flip. Typing `/accessibility-audit` or `/a11y-audit` removes the guesswork.
+
+Every other plugin can be started with a simple `/command`, or just by describing what you want.

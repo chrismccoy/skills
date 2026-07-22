@@ -17,6 +17,7 @@ Claude plugin marketplace for all my own custom skills.
 
 - [`app-blueprint`](#app-blueprint). Produces a full production app blueprint from your idea - folder layout, data models, API design, dependencies, tests, and CI/CD.
 - [`html-design-styles`](#html-design-styles). 53 named design styles with full color palettes, typography, and component patterns.
+- [`accessibility-audit`](#accessibility-audit). Checks a page, a folder, or a single component against the accessibility rules, tells you what is broken and why it matters, and can fix it for you. Command only, so it never fires on its own or clashes with another accessibility plugin.
 
 **Refactor, Map and Clean Up**
 
@@ -76,6 +77,7 @@ In any Claude Code session, run:
 # Plan and Design
 /plugin install app-blueprint@chrismccoy
 /plugin install html-design-styles@chrismccoy
+/plugin install accessibility-audit@chrismccoy
 
 # Refactor, Map and Clean Up
 /plugin install refactoring-analyst@chrismccoy
@@ -715,6 +717,73 @@ Keep all existing sections, copy, and CTAs. only change the visual design.
 That's it. The skill handles the rest. typography, color palette, layout grid, components, and interactions. all consistent with the named style spec.
 
 The full skill instructions live at [`html-design-styles/skills/html-design-styles/SKILL.md`](html-design-styles/skills/html-design-styles/SKILL.md), the cross-cutting patterns at [`references/common.md`](html-design-styles/skills/html-design-styles/references/common.md), and each style's complete spec under [`references/styles/`](html-design-styles/skills/html-design-styles/references/styles/).
+
+---
+
+### `accessibility-audit`
+
+Finds, reports, and fixes WCAG accessibility issues in web UI, in the voice of a senior accessibility engineer. Five-field intake, four locked modes, four audit flows that prefer the rendered page over the source. Command only. it ships no skill file, so it never auto-triggers.
+
+```
+/plugin install accessibility-audit@chrismccoy
+```
+
+Most accessibility answers do one of two unhelpful things. They dump a raw axe-core log with two hundred entries, thirty of which are the same button repeated, or they start editing files when all you asked for was a report. This plugin does neither. It asks what you want first - mode, scope, and standard in one round, then a single follow-up only if it applies - and holds to the answers. Report mode never touches a file, no matter how obvious the fix looks. Findings are grouped by rule and by component family, so one broken button pattern reads as one finding with a count, not thirty rows. Every finding carries its WCAG criterion. Engine fix directives are quoted word for word rather than paraphrased, and anything that needs written content, alt text, a label, an error message, is left as a TODO with the rule ID instead of invented.
+
+It prefers auditing the page as the browser actually renders it, because source code hides real failures. Four flows are tried in order: the AccessLint MCP for any URL, then a browser MCP when your logged-in session or a specific page state matters, then static analysis of HTML files or JSX rendered to a string, then a plain axe-core script when there is no MCP but there is Node and a dev server. Whichever one it used is stated in the output.
+
+There is a fourth mode for the case where there is no file and no page, just a component you pasted. It returns a four-phase blueprint instead of a report: the flaws in the code as given, the technical approach before any code appears, the complete refactor in your stack with a comment on every accessibility addition, and a testing guide listing what each key should do and what a screen reader should announce. Those key bindings are not improvised. They come from the ARIA Authoring Practices tables bundled with the plugin, covering dialog, disclosure, accordion, tabs, menu and menubar, combobox, listbox, tree, slider, and grid. A custom binding that fights the standard pattern is treated as a defect, because assistive technology users show up already knowing what Arrow and Escape are supposed to do.
+
+The honest part is what it refuses to claim. Automated checks catch roughly a third of real accessibility failures. Content clarity, screen reader announcement quality, keyboard flow, and complex contrast all need a person. Those get their own section in the report, listed as still to verify, rather than being quietly folded into a passing score. It also will not tell you that you are legally compliant, for the ADA or Section 508 or EN 301 549 or the EAA. It aligns code with WCAG technical criteria. Whether an organization is compliant is a legal determination made by people, on evidence this command does not produce.
+
+**Why it is command only.** Every other plugin here ships a skill so it can trigger on natural language. This one does not, on purpose. Accessibility is a crowded space, and if you already have another accessibility plugin installed, two skills competing for "make this accessible" produces a coin flip. Dropping the skill file removes the coin flip. Type the command and you get this workflow, every time.
+
+#### 📋 Technical Overview
+
+A Claude Code plugin with two slash commands, no skill, and three reference files. The full workflow lives in `commands/accessibility-audit.md`. persona, intake, flow picker, all four mode workflows, locked output formats, bail rules, a silent pre-delivery validation gate, and hard rules. `commands/a11y-audit.md` is a thin alias that reads the canonical file. References load from `${CLAUDE_PLUGIN_ROOT}/references/` only while the command runs, so nothing competes at discovery time with another plugin's accessibility skill.
+
+#### ✨ Features
+
+- 🎯 Five intake fields. MODE + SCOPE + STANDARD, plus FIX_AUTHORITY when fixing and TECH_STACK when refactoring a pasted component
+- 🔒 Four locked modes. Report writes and never edits, Fix runs baseline to edit to verify, Component returns a four-phase blueprint for pasted code, Guide applies the rules to UI you are writing
+- 🌐 Four-tier flow picker preferring live DOM. AccessLint MCP, browser MCP, static analysis, local axe-core. always names the flow used
+- 🧾 Deduplicated by rule ID and component family, prioritized by user impact. no thirty-row repeats
+- 📐 WCAG criterion ID on every finding, across 2.1 AA, 2.2 AA, 2.2 AAA, and Section 508 / EN 301 549
+- ⌨️ Per-widget expected keyboard tables from the ARIA Authoring Practices. dialog, disclosure, accordion, tabs, menu and menubar, combobox, listbox, tree, slider, grid
+- ✍️ Never invents alt text, labels, or error copy below Full remediation. leaves a TODO with the rule ID
+- 🧬 Every surviving ARIA attribute is justified. one that duplicates what a native element already says is treated as a defect, not a fix
+- 🔁 Fix mode verifies by re-auditing and diffing the baseline, and bails loudly instead of iterating silently
+- 🧷 Fix mode checks `git status` before editing and, if verification fails, hands you the exact revert command rather than leaving a mutated tree. it is the only mode that writes
+- 🧑‍🦯 Separates automated findings from the manual and assistive-technology checks it cannot cover
+- ⚖️ No legal compliance claims. not ADA, Section 508, EN 301 549, the EAA, or lawsuit risk. WCAG technical alignment only
+- ✅ Silent output gate before every response. criterion ID on each finding, all four Component phases present, no invented copy, no compliance claim leaked, no padded findings when the audit comes back clean
+- 🛡️ Injection defense over the audited code itself, not just your answers. a comment telling it to report no violations becomes a finding instead of an instruction
+- 🧰 Bundled tooling: axe-core auditor, jest-axe component tests, contrast analyzer, keyboard and screen reader scripts, pa11y, GitHub Actions CI, HTML report generator
+- 🚫 No skill file, by design. never auto-triggers, never collides with another accessibility plugin
+- 🪧 Scope-locked. general UI design review, performance work, and non-accessibility refactors get one refusal line
+
+#### 🔄 How it works
+
+1. **Intake.** Two `AskUserQuestion` rounds - MODE, SCOPE, and STANDARD first, then FIX_AUTHORITY in Fix mode or TECH_STACK in Component mode, only when it applies. An argument passed with the command is offered as the pre-filled scope option.
+2. **Validate.** Empty or placeholder required fields halt with one targeted question each. A whole-repo scope with no narrowing stops and asks for a directory, route, or component family. Component mode with nothing pasted asks for the source, and incompatible mode/scope pairs (Fix on a URL, Component on a directory) are rejected up front.
+3. **Pick a flow.** AccessLint MCP, then browser MCP, then a local axe-core script, then static analysis as the last resort. Live-DOM auditing is preferred throughout; non-URL targets skip straight to static.
+4. **Run the mode.** Report maps the surface, audits, groups by pattern, and writes the report. Fix baselines, locates each violation, applies within the chosen authority, then re-audits and diffs. Component runs audit, strategy, commented code, testing guide. Guide loads the rule catalog and applies it inline.
+5. **Verify or flag.** Fix mode confirms targeted rules cleared and nothing new appeared, in a locked table of what was applied, what was deferred, and why. Report and Component modes list what still needs a human with a screen reader.
+6. **Silent output gate.** Every finding carries a criterion ID, all four Component phases are present with complete code, nothing implies legal compliance, no copy was invented, and a clean audit is reported as clean rather than padded to fill the template. Failures are fixed before the response is sent.
+7. **Output** with scope, standard, and flow named at the top.
+
+#### 🚀 How to use it
+
+```
+/accessibility-audit src/components          ← arg seeds the scope
+/accessibility-audit http://localhost:3000
+/a11y-audit                                  ← short alias, full intake
+/a11y-audit                                  ← then paste a component for Component mode
+```
+
+There is no natural-language trigger. That is the point. Both commands are identical and either one runs the same intake first.
+
+The command lives at [`accessibility-audit/commands/accessibility-audit.md`](accessibility-audit/commands/accessibility-audit.md), the alias at [`accessibility-audit/commands/a11y-audit.md`](accessibility-audit/commands/a11y-audit.md), and the reference files under [`accessibility-audit/references/`](accessibility-audit/references/).
 
 ---
 
@@ -1975,6 +2044,14 @@ The full skill instructions live at [`session-stats/skills/session-stats/SKILL.m
 │ └── references/
 │ ├── common.md
 │ └── styles/ ← one file per style (53 total)
+├── accessibility-audit/ ← plugin (command only, no skills/ by design)
+│ ├── commands/
+│ │ ├── accessibility-audit.md ← /accessibility-audit slash command (two-round AskUserQuestion intake + 4 mode workflows)
+│ │ └── a11y-audit.md ← /a11y-audit alias, reads the canonical command file
+│ └── references/
+│ ├── wcag-rules.md ← 8 priority rule categories + before/after fixes + ARIA patterns
+│ ├── tooling.md ← axe-core, jest-axe, contrast, keyboard, pa11y, CI, report generator
+│ └── manual-checklist.md ← keyboard, screen reader, visual, cognitive checks + per-widget key tables
 ├── wp-builder-pro/ ← plugin
 │ ├── commands/
 │ │ └── wp-builder-pro.md ← /wp-builder-pro slash command (4-field AskUserQuestion intake + target routing)
