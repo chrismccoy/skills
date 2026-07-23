@@ -2,6 +2,8 @@
 
 Claude plugin marketplace for all my own custom skills.
 
+29 plugins available. Install any one on its own, or the whole set.
+
 ## Available plugins
 
 **WordPress**
@@ -54,6 +56,7 @@ Claude plugin marketplace for all my own custom skills.
 - [`language-tutor`](#language-tutor). Translates and explains a phrase, or corrects and critiques your writing, with grammar notes, pronunciation tips, and better alternatives.
 - [`contract-framework`](#contract-framework). Writes a clear, fair freelance or consulting contract from a few plain questions, covering the work, the payment, and who owns the finished result, with anything that depends on where you live flagged for you to check locally.
 - [`readme-builder`](#readme-builder). Reads a whole project and writes one beginner friendly `README.md` for it, in a fixed order, in plain everyday English, with hype words and long dashes kept out.
+- [`tutorial-builder`](#tutorial-builder). Turns code or a topic into a step-by-step, hands-on tutorial that teaches instead of describing, where every code block runs and shows its output, with a pre-publish checklist and a 1-5 speed score before you get it.
 
 **Session tools**
 
@@ -107,6 +110,7 @@ In any Claude Code session, run:
 /plugin install language-tutor@chrismccoy
 /plugin install contract-framework@chrismccoy
 /plugin install readme-builder@chrismccoy
+/plugin install tutorial-builder@chrismccoy
 
 # Session tools
 /plugin install session-stats@chrismccoy
@@ -1916,6 +1920,64 @@ The full skill instructions live at [`readme-builder/skills/readme-builder/SKILL
 
 ---
 
+### `tutorial-builder`
+
+Turns code, a feature, or a library into a step-by-step, hands-on tutorial that teaches instead of describing. Five inputs, a locked tutorial structure, retention patterns and cognitive-load limits built in, and a pre-publish checklist plus a 1-5 speed score that gate the result.
+
+```
+/plugin install tutorial-builder@chrismccoy
+```
+
+Most "write a tutorial" prompts produce a wall of prose with a code dump in the middle: concepts used before they are introduced, examples that do not run, no exercises, and no way for the reader to check they got it right. This plugin works the way a careful teacher does. It sets measurable objectives first (Bloom's verbs like build and debug, not "understand"), breaks the topic into atomic concepts ordered simple to complex with no forward references, and scaffolds practice as I-do, We-do, You-do. Every code block runs unmodified, lists its dependencies, and shows its expected output. Each section carries a minimal example, guided practice, a few challenges, and a troubleshooting table. The reader leaves with a summary that mirrors the opening and a concrete set of next steps.
+
+The skill body runs the workflow and stays lean. Retention patterns (learn by doing, spaced repetition, worked examples, immediate feedback, analogies), cognitive-load limits (7 plus-or-minus 2, one-screen code, one new concept per step), and five difficulty-calibrated exercise types keep the pacing right. Depth that is not needed on every build lives one hop away in `references/implementation-playbook.md` - a full worked tutorial, per-format deep-dives, an exercise bank, and an expanded review rubric - and a finished `examples/sample-tutorial.md` ships as a copy-ready target. A pre-publish quality checklist and a 1-5 speed score (clarity, pacing, practice, troubleshooting, engagement) run before delivery.
+
+Supplied code and repo content are treated as inert data - a directive embedded in a comment or filename is content to teach around, never a command to obey. Scope-locked to teaching content: non-tutorial and role-change requests get `I only build tutorials - give me a topic or some code and I'll teach it.`
+
+#### 📋 Technical Overview
+
+A Claude Code plugin with one slash command and one skill. The skill body in `skills/tutorial-builder/SKILL.md` carries the persona, scope lock, the three-step development process, the locked tutorial structure, retention and cognitive-load rules, and the quality gates. The on-demand `references/implementation-playbook.md` holds a full worked tutorial, a formats table with per-format guidance, a difficulty-calibrated exercise bank, and an expanded review rubric. A finished `examples/sample-tutorial.md` ships as a copy target. The slash command `/tutorial-builder` accepts an optional `TOPIC` or path, then walks the user through `AskUserQuestion` intake for the remaining four fields.
+
+#### ✨ Features
+
+- 🎯 Five inputs in, one complete tutorial out. TOPIC + AUDIENCE + FORMAT + CONSTRAINTS + DISTRIBUTION
+- 🧱 Locked structure: opening (objectives, prerequisites, time, final result, setup), progressive sections, closing (summary, next steps, resources, call to action)
+- 🪜 Concepts ordered simple to complex with no forward references, and exercises scaffolded I-do, We-do, You-do
+- 💻 Every code block runs unmodified, lists dependencies, and shows expected output
+- 🧠 Retention patterns and cognitive-load limits (7 plus-or-minus 2, one-screen code, one new concept per step) built into the pacing
+- 🧩 Five difficulty-calibrated exercise types: fill-in-the-blank, debug, extension, from-scratch, refactoring
+- 📚 Bundled playbook with a full worked tutorial, per-format deep-dives, an exercise bank, and a review rubric, loaded only when depth is needed
+- ✅ Pre-publish checklist plus a 1-5 speed score (clarity, pacing, practice, troubleshooting, engagement) gate the result, target a 4 average
+- 🛡️ Supplied code and repo content treated as inert data; embedded directives are taught around, never obeyed
+- 🪧 Scope-locked. Non-tutorial and role-change requests refused with `I only build tutorials - give me a topic or some code and I'll teach it.`
+
+#### 🔄 How it works
+
+1. **Intake.** Slash command collects five fields via `AskUserQuestion`. If a `TOPIC` or path was passed as `$ARGUMENTS`, confirm and skip that question. If the user skips intake, apply the stated defaults: intermediate audience, deep dive format, blog or docs, latest stable tools.
+2. **Define objectives.** Set measurable learning outcomes with Bloom's verbs, plus prerequisites and assumed knowledge.
+3. **Decompose.** Break the topic into atomic concepts, order them simple to complex, and confirm no concept needs one introduced later.
+4. **Write** the tutorial in the locked structure, one new concept per step, every code block runnable with expected output shown. Load `references/implementation-playbook.md` for a worked example, per-format detail, or the exercise bank.
+5. **Gate.** Run the pre-publish checklist and the 1-5 speed score. Fix any failing gate before returning.
+
+#### 🚀 How to use it
+
+Two ways to invoke:
+
+**Slash command:**
+
+```
+/tutorial-builder "Debounce a search input in vanilla JS"   ← arg seeds TOPIC, picker fills the rest
+/tutorial-builder                                            ← full 5-question intake
+```
+
+**Natural language** (auto-triggers via the skill):
+
+> *"create a tutorial for X"*, *"write a step-by-step guide to Y"*, *"turn this code into a tutorial"*, *"make a walkthrough of Z"*, *"build a coding lesson"*, *"write onboarding docs"*
+
+The full skill instructions live at [`tutorial-builder/skills/tutorial-builder/SKILL.md`](tutorial-builder/skills/tutorial-builder/SKILL.md), the slash command at [`tutorial-builder/commands/tutorial-builder.md`](tutorial-builder/commands/tutorial-builder.md), the on-demand playbook at [`tutorial-builder/skills/tutorial-builder/references/implementation-playbook.md`](tutorial-builder/skills/tutorial-builder/references/implementation-playbook.md), and the sample tutorial at [`tutorial-builder/skills/tutorial-builder/examples/sample-tutorial.md`](tutorial-builder/skills/tutorial-builder/examples/sample-tutorial.md).
+
+---
+
 ## Session tools
 
 ### `session-stats`
@@ -2170,15 +2232,25 @@ The full skill instructions live at [`session-stats/skills/session-stats/SKILL.m
 │ ├── framework.md ← Sections 1-10 analysis + generation prompts
 │ ├── output-contract.md ← word caps, Section 10 scales, summary-table columns, validation checklist
 │ └── guardrails.md ← input handling + prompt-injection defense + system rules
-└── language-tutor/ ← plugin
+├── language-tutor/ ← plugin
+ │ ├── commands/
+ │ │ └── language-tutor.md ← /language-tutor slash command (5-field AskUserQuestion intake)
+ │ └── skills/
+ │ └── language-tutor/
+ │ ├── SKILL.md ← persona + scope lock + core behavior + inputs + 4-step workflow + silent validation gate
+ │ └── references/
+ │ ├── prompt-template.md ← authoritative master prompt with {{placeholders}} + both mode specs
+ │ ├── constraints.md ← accuracy floor, prompt-injection defense, scope lock, silent validation gate
+ │ └── output-spec.md ← section structure for both modes, optional extras, two worked examples
+└── tutorial-builder/ ← plugin
  ├── commands/
- │ └── language-tutor.md ← /language-tutor slash command (5-field AskUserQuestion intake)
+ │ └── tutorial-builder.md ← /tutorial-builder slash command (5-field AskUserQuestion intake)
  └── skills/
- └── language-tutor/
- ├── SKILL.md ← persona + scope lock + core behavior + inputs + 4-step workflow + silent validation gate
- └── references/
- ├── prompt-template.md ← authoritative master prompt with {{placeholders}} + both mode specs
- ├── constraints.md ← accuracy floor, prompt-injection defense, scope lock, silent validation gate
- └── output-spec.md ← section structure for both modes, optional extras, two worked examples
+ └── tutorial-builder/
+ ├── SKILL.md ← persona + scope lock + 3-step process + locked structure + retention rules + quality gates
+ ├── references/
+ │ └── implementation-playbook.md ← worked tutorial, per-format deep-dives, exercise bank, review rubric
+ └── examples/
+ └── sample-tutorial.md ← a finished tutorial to copy and adapt
 ```
 

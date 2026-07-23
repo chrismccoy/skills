@@ -126,6 +126,10 @@ This writes a clear, fair contract for freelance or consulting work. You answer 
 
 This reads a whole project and writes one README file for it, aimed at complete beginners. It opens and reads the real files first to work out what the project is and what each file does, then writes the same set of sections every time: a title, a plain description, a feature list, a note on each file, a folder tree, and steps to use it. The writing stays in short, everyday English with no jargon. Hype words like "seamless" and "powerful" are banned, and so are long dashes and fancy symbols, so the result reads plain and honest. It only describes what is really in the project, so nothing is made up. Good for anyone who wants a clear README but does not enjoy writing one.
 
+### tutorial-builder
+
+This turns code or a topic into a proper step-by-step tutorial that actually teaches, not just a page of text with some code in the middle. You give it a subject and answer a few questions about who it is for and how long it should be, and it writes a lesson that builds up one idea at a time. Every piece of code it includes is meant to run and shows you the output to expect, and each section ends with a small exercise so the reader can check they got it. It never uses a concept before explaining it, and it finishes with a summary and clear next steps. Before handing the tutorial over it runs its own checklist and scores itself, so what you get is already reviewed. Good for turning something you know into a lesson other people can follow.
+
 ## Session tools
 
 ### session-stats

@@ -2,7 +2,7 @@
 
 A quick guide to what's in this marketplace and how the plugins compare. Each plugin is sorted into one of three groups by **how much it does** - not by how good it is. A "quick win" plugin can be just as useful as a "full toolkit" one; it just does a smaller, more focused job.
 
-**At a glance:** 1 quick win · 14 guided helpers · 13 full toolkits.
+**At a glance:** 1 quick win · 15 guided helpers · 13 full toolkits.
 
 ## Quick wins
 
@@ -25,6 +25,7 @@ These ask you a few questions (or take a short description), then produce a comp
 | `language-tutor` | `/language-tutor` | Translates and explains a phrase, or corrects your writing with grammar and pronunciation tips |
 | `contract-framework` | `/draft-contract` | Writes a clear, fair freelance or consulting contract covering the work, the payment, and who owns the finished result, with anything legal flagged to check locally |
 | `readme-builder` | `/readme-builder` | Reads a whole project and writes one beginner friendly README in a fixed order, plain English, with hype words and long dashes kept out |
+| `tutorial-builder` | `/tutorial-builder` | Turns code or a topic into a step-by-step, hands-on tutorial that teaches, every code block runnable with its output shown, gated by a checklist and a 1-5 score |
 | `naming-strategist` | `/name-domains` | Brainstorms 10 brandable domain names, picks the best 3, and gives you a checklist to verify them |
 | `refactoring-analyst` | `/refactor` | Reviews your code and returns a prioritized clean-up plan, every issue tied to a real file and line |
 | `kubernetes-architect` | `/kubernetes-architect` | Turns your app details into ready-to-use Kubernetes setup files |
@@ -61,11 +62,11 @@ The heavy hitters. They run multi-step workflows, generate whole sets of files, 
 - `naming-strategist` → type `/name-domains`
 - `contract-framework` → type `/draft-contract`
 
-The other 25 use their own name as the command. `accessibility-audit` also answers to the shorter `/a11y-audit`.
+The other 26 use their own name as the command. `accessibility-audit` also answers to the shorter `/a11y-audit`.
 
 **How each one gets what it needs from you:**
 
-- **Asks multiple-choice questions** (just pick from a menu): 22 plugins - the easiest way to start
+- **Asks multiple-choice questions** (just pick from a menu): 23 plugins - the easiest way to start
 - **Asks a few questions directly:** 1 - `html-to-wordpress-theme`
 - **Just works from what you point it at** (a file path or your current session, no questions): 5 - `changelog-generator`, `docblock-rewrite`, `mermaid-to-ascii`, `session-stats`, `wordpress-architect-review`
 
