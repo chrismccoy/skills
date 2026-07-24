@@ -44,6 +44,8 @@ whole mechanism.
 
 Make the delay configurable per input via a `data-ms` attribute.
 
+**Success:** an input with `data-ms="500"` debounces at 500ms; one with no attribute falls back to 300ms.
+
 <details>
 <summary>Solution</summary>
 

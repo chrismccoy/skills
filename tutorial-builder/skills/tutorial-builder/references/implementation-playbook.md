@@ -45,6 +45,8 @@ document.querySelector("#q").addEventListener("input", (e) => search(e.target.va
 
 Make the delay configurable per input via a `data-ms` attribute.
 
+**Success:** an input with `data-ms="500"` debounces at 500ms; one with no attribute falls back to 300ms.
+
 <details>
 <summary>Solution</summary>
 
@@ -108,7 +110,7 @@ Expanded guidance for each format the SKILL.md formats section names.
 - Lead with the finished snippet, then explain the parts.
 
 ### Interactive Labs
-- Pin the environment (Replit/GitPod/CodeSandbox link) so setup cannot drift.
+- Pin the environment to a real, supplied Replit/GitPod/CodeSandbox link so setup cannot drift — never fabricate the URL; if none exists, give exact setup commands instead.
 - Provide checkpoints as failing tests the reader makes pass.
 
 ---
@@ -176,9 +178,10 @@ choosing approaches, and progress indicators for multi-step processes.
 Apply after drafting, before publishing. Fail any hard gate → do not ship.
 
 **Hard gates:**
-- Every code block runs unmodified.
+- Every code block is written to run unmodified — complete, no undefined names, no elided `...`. You cannot execute it, so trace it; if unsure it runs, label it pseudocode in that language's comment syntax and never present it as tested.
 - No concept used before it is introduced.
 - Each exercise has a checkable success criterion.
+- No fabricated URLs or images — cite only real canonical links, else name the resource without a link.
 
 **Quality signals:**
 - Analogy present for each abstract concept.

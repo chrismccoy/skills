@@ -9,9 +9,11 @@ Invoke the `tutorial-builder` skill. Collect five inputs from the user, then wri
 
 ## Intake Procedure
 
-Use `AskUserQuestion` to collect each missing field. Ask one field at a time so the UI stays focused. If the user passed an argument with the command, treat it as the initial `TOPIC` candidate (a subject or a path to code) and confirm before proceeding.
+Only **TOPIC** is a blocker — without it there is nothing to teach. If the user passed an argument with the command, treat it as the initial `TOPIC` candidate (a subject or a path to code) and confirm before proceeding.
 
-Required fields:
+For the other four fields, do not interrogate: if they are missing, apply the defaults below, state the assumptions in one line at the top of the tutorial, and invite correction. If you do collect them via `AskUserQuestion`, batch the open fields into a single prompt — do not ask one field per turn.
+
+Fields:
 
 1. **TOPIC** - the concept, feature, library, or codebase the tutorial covers. Free-text or a path. Present 2-4 example topics plus the user's "Other" escape hatch. Example: `Debounce a search input in vanilla JS`.
 2. **AUDIENCE** - reader level. Offer: `beginner`, `intermediate`, `advanced`. Closed set. Map any custom "Other" value to the nearest listed level or re-ask.
@@ -30,7 +32,7 @@ After the inputs are collected:
 1. Follow the full procedure in `skills/tutorial-builder/SKILL.md`.
 2. For a full worked example, per-format detail, an exercise bank, or the expanded review rubric, load `skills/tutorial-builder/references/implementation-playbook.md`.
 3. Match the finished shape in `skills/tutorial-builder/examples/sample-tutorial.md`.
-4. Run the pre-publish quality checklist and the 1-5 speed score before returning. Fix any failing gate first.
+4. Run the pre-publish quality checklist (the checkable yes/no gate) before returning. Fix any failing gate first.
 
 ## Trust boundary
 
