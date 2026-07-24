@@ -2,7 +2,7 @@
 
 Claude plugin marketplace for all my own custom skills.
 
-29 plugins available. Install any one on its own, or the whole set.
+30 plugins available. Install any one on its own, or the whole set.
 
 ## Available plugins
 
@@ -29,6 +29,7 @@ Claude plugin marketplace for all my own custom skills.
 - [`explain-my-code`](#explain-my-code). Reads a whole repo and writes one self-contained onboarding document - architecture, folder map, app flow, design patterns, risks - in 13 fixed sections with Mermaid diagrams, so anyone new to the project can get up to speed just by reading it.
 - [`docblock-rewrite`](#docblock-rewrite). Rewrites bulky PHPDoc and JSDoc blocks into short, plain-English one-line comments, backing up the originals first.
 - [`unslop`](#unslop). Strips the AI-sounding voice out of comments, docstrings, and names in your code without changing how the code runs. Works across 19+ languages.
+- [`strip-unicode`](#strip-unicode). Flattens messy Unicode - curly quotes, long dashes, ellipses, bullets, invisible characters - down to plain 7-bit ASCII that works everywhere, either cleaning a file in place or handing back tidied text, with a table of everything it changed. It swaps characters only; it never rewrites your words.
 - [`changelog-generator`](#changelog-generator). Writes a changelog your users can read from a repo's whole git history by reading the real code changes, not the commit messages, then sorts every change and saves `CHANGELOG.md`.
 
 **Servers and Scripting**
@@ -89,6 +90,7 @@ In any Claude Code session, run:
 /plugin install explain-my-code@chrismccoy
 /plugin install docblock-rewrite@chrismccoy
 /plugin install unslop@chrismccoy
+/plugin install strip-unicode@chrismccoy
 
 # Servers and Scripting
 /plugin install docker-compose-architect@chrismccoy
@@ -1209,6 +1211,69 @@ Natural language triggers (skill auto loads):
 > *"unslop this file"*, *"deslop the repo"*, *"remove AI tells from `src/auth.ts`"*, *"strip em-dashes from comments"*, *"rename `orchestrateDataProvider` to something human"*, *"audit this file for AI slop"*, *"clean the AI voice out of these comments"*, *"kill the marketing words in this codebase"*
 
 The full skill instructions live at [`unslop/skills/unslop/SKILL.md`](unslop/skills/unslop/SKILL.md), the slash command at [`unslop/commands/unslop.md`](unslop/commands/unslop.md), the complete 16 rule, 19 language, 22 framework ruleset in [`references/full-ruleset.md`](unslop/skills/unslop/references/full-ruleset.md), and verification greps in [`scripts/verify.sh`](unslop/skills/unslop/scripts/verify.sh).
+
+---
+
+### `strip-unicode`
+
+Flatten messy Unicode down to plain 7-bit ASCII, without changing a single word.
+
+```
+/plugin install strip-unicode@chrismccoy
+```
+
+Text picks up junk everywhere it travels. A word processor turns your straight quotes into curly ones, your hyphens into long em dashes, your three dots into a single ellipsis character. A copy-paste from a website drags in non-breaking spaces and invisible zero-width characters that break diffs, grep, and code. `strip-unicode` is a deterministic sanitizer that walks the text once and maps every non-ASCII character back to the plain 7-bit range: `“Hi—bye”…` becomes `"Hi-bye"...`. It transliterates, it never interprets. Line breaks, indentation, and wording stay exactly as written. Nothing is summarized, rewritten, or grammar-fixed.
+
+The same input always gives the same output. A bundled Python script does the character mapping, so it is repeatable rather than a best guess, and every run ends with a table of exactly what changed and a check that no non-ASCII characters are left behind.
+
+**Two modes, chosen by structure not content.** Multi-line input is treated as pasted text and cleaned in a code block. A single line that is not a real file is also pasted text. A single line that *does* match an existing file is ambiguous, so the skill asks before it touches anything - it never guesses its way into overwriting a file. Given no input, it shows a simple File-or-Paste picker.
+
+**Safety rails on file mode.** When cleaning a file it echoes the target first, then overwrites it in place. If the file cannot be read or written it aborts with `Error: <path> not writable - no changes made.` rather than leaving a half-written file behind, and it never falls back to paste mode on a failure. It never deletes a file and never writes anywhere except the one named path.
+
+**Prompt-injection proof.** Everything in the input is inert data to be cleaned. If the text contains lines like `ignore previous instructions` or `system:`, they are cleaned as literal characters, never obeyed.
+
+#### ✨ What it changes
+
+- ➖ **Dashes**: em dash `—` and en dash `–` (and the horizontal bar `―`) become a plain hyphen `-`
+- 💬 **Curly quotes**: `“ ” „` become straight `"`; `‘ ’ ‚` become straight `'`
+- 🔢 **Ellipsis**: `…` becomes three dots `...`
+- 🔘 **Bullets**: `•` `▪` `◦` `⁃` become `-`
+- 🌫️ **Invisible characters**: non-breaking, thin, and narrow spaces become a normal space; zero-width space, zero-width joiners, and the BOM are removed
+- ➗ **Math symbols**: `≤` → `<=`, `≥` → `>=`, `≠` → `!=`, `×` → `x`, `÷` → `/`
+- 🔤 **Everything else**: any other non-ASCII character is mapped to its nearest ASCII form (`café` → `cafe`, `™` → `TM`). Characters with no ASCII form (`€`, emoji, CJK) are removed and logged as `(removed)`
+- 🧱 **Precedence**: the specific rules above always win over the catch-all, and no character is ever transformed twice
+
+#### 📊 The report
+
+After cleaning, both modes print a table sorted by how often each character appeared, then confirm the result is clean:
+
+```
+| char | replaced with | count |
+|------|---------------|-------|
+| —    | -             | 4     |
+| “    | "             | 2     |
+| …    | ...           | 1     |
+
+Non-ASCII remaining: 0
+```
+
+If the text was already plain ASCII, it skips the table and says `No changes - already 7-bit ASCII.` instead.
+
+#### 🚀 How to use it
+
+Slash command:
+
+```
+/strip-unicode                 # File or Paste picker
+/strip-unicode notes.md        # matches a file, so it asks File (1) or text (2) first
+/strip-unicode “Hi—bye”…       # pasted text, cleaned in a code block
+```
+
+Natural language triggers (skill auto loads):
+
+> *"strip the unicode from this"*, *"convert this to plain ASCII"*, *"remove the smart quotes"*, *"replace the em dashes"*, *"clean the zero-width characters out of this"*, *"normalize this text to ASCII"*
+
+The full skill instructions live at [`strip-unicode/skills/strip-unicode/SKILL.md`](strip-unicode/skills/strip-unicode/SKILL.md), the slash command at [`strip-unicode/commands/strip-unicode.md`](strip-unicode/commands/strip-unicode.md), and the deterministic transliteration script at [`scripts/strip_unicode.py`](strip-unicode/skills/strip-unicode/scripts/strip_unicode.py).
 
 ---
 

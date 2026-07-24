@@ -2,7 +2,7 @@
 
 A quick guide to what's in this marketplace and how the plugins compare. Each plugin is sorted into one of three groups by **how much it does** - not by how good it is. A "quick win" plugin can be just as useful as a "full toolkit" one; it just does a smaller, more focused job.
 
-**At a glance:** 1 quick win · 15 guided helpers · 13 full toolkits.
+**At a glance:** 1 quick win · 15 guided helpers · 14 full toolkits.
 
 ## Quick wins
 
@@ -47,6 +47,7 @@ The heavy hitters. They run multi-step workflows, generate whole sets of files, 
 | `powershell-script-engine` | `/powershell-script-engine` | Writes clean, production-ready PowerShell scripts with logging, error handling, and safe credential use |
 | `html-to-wordpress-theme` | `/html-to-wordpress-theme` | Converts your static HTML into an installable WordPress theme, checking its own work as it goes |
 | `unslop` | `/unslop` | Strips the AI-sounding voice out of your comments and names without changing how the code runs |
+| `strip-unicode` | `/strip-unicode` | Flattens messy Unicode - curly quotes, long dashes, invisible characters - down to plain ASCII, cleaning a file in place or handing back tidied text, with a table of what changed |
 | `docblock-rewrite` | `/docblock-rewrite` | Rewrites bulky code comments into short one-liners anyone can read, backing up the originals first |
 | `codebase-to-mermaid` | `/codebase-to-mermaid` | Reads a codebase you don't know and draws accurate diagrams, every box tied to a real file and line |
 | `mermaid-to-ascii` | `/mermaid-to-ascii` | Redraws a Mermaid diagram file as plain text-art and saves it next to the original, ready to paste into a comment, README, or terminal |
@@ -62,11 +63,11 @@ The heavy hitters. They run multi-step workflows, generate whole sets of files, 
 - `naming-strategist` → type `/name-domains`
 - `contract-framework` → type `/draft-contract`
 
-The other 26 use their own name as the command. `accessibility-audit` also answers to the shorter `/a11y-audit`.
+The other 27 use their own name as the command. `accessibility-audit` also answers to the shorter `/a11y-audit`.
 
 **How each one gets what it needs from you:**
 
-- **Asks multiple-choice questions** (just pick from a menu): 23 plugins - the easiest way to start
+- **Asks multiple-choice questions** (just pick from a menu): 24 plugins - the easiest way to start
 - **Asks a few questions directly:** 1 - `html-to-wordpress-theme`
 - **Just works from what you point it at** (a file path or your current session, no questions): 5 - `changelog-generator`, `docblock-rewrite`, `mermaid-to-ascii`, `session-stats`, `wordpress-architect-review`
 
